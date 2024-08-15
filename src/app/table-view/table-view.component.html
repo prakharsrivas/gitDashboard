@@ -1,0 +1,19 @@
+<div class="container">
+ <br>   
+<h2>Table</h2>
+
+<ag-grid-angular
+    style="width: 1000px; height: 500px;"
+    [rowData]="tableData"
+    [columnDefs]="colDefs"
+    [defaultColDef]="defaultColDef"
+    [rowSelection]="rowSelection"
+    [suppressRowClickSelection]="true"
+    [pagination]="true"
+    [paginationPageSize]="paginationPageSize"
+    [paginationPageSizeSelector]="paginationPageSizeSelector"
+    [class]="themeClass"
+  />
+
+  <br>
+</div>
