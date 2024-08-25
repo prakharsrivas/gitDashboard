@@ -1,42 +1,32 @@
-import { Injectable } from '@angular/core';
-import { Observable } from '@apollo/client/utilities';
-import { Apollo, gql } from 'apollo-angular';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { Observable } from 'rxjs';
+import { Apollo, gql } from "apollo-angular";
+import { map } from "rxjs/operators";
+import { Node } from "./GitData.interface";
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class GitserviceService {
-
-  constructor(private readonly apollo: Apollo) { }
-  private dataSet = new BehaviorSubject<Array<Object>>([]);
-  public getDetailsOfRepo() {
-    return this.apollo
-      .watchQuery({
+  constructor(private readonly apollo: Apollo) {}
+  
+  public getDetailsOfRepo(){
+    return this.apollo.watchQuery({
         query: gql`
           {
             viewer {
               repositories(first: 100, affiliations: [OWNER]) {
                 totalCount
-                pageInfo {
-                  endCursor
-                  hasNextPage
+                nodes {
+                  name
+                  createdAt
+                  stargazerCount
+                  projectsUrl
                 }
-                nodes{
-                  name,
-                  createdAt,
-                  stargazerCount,
-                  projectsUrl,
-                  owner{
-                    login
-                  }
-                  }
-                }
+              }
             }
           }
-      `,
+        `,
       })
-      // .valueChanges.subscribe((result: any) => {
-      //  return this.dataSet = result.data.viewer.repositories.nodes;
-      // })
+      .valueChanges.pipe(map((result: any) => result.data.viewer.repositories.nodes));
   }
 }

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit} from '@angular/core';
 import { GitserviceService } from '../gitservice.service';
 import * as d3 from 'd3';
+import { Node } from '../GitData.interface';
 @Component({
   selector: 'app-graph-view',
   standalone: true,
@@ -12,7 +13,7 @@ export class GraphViewComponent implements OnInit{
 
   constructor(private _gitserviceService:GitserviceService){}
 
-  graphData!:Array<Object>;
+  graphData!:Array<Node>;
 
   private svg: any;
   private margin = 50;
@@ -20,8 +21,8 @@ export class GraphViewComponent implements OnInit{
   private height = 400 - (this.margin * 2);
 
   ngOnInit(): void {
-    this._gitserviceService.getDetailsOfRepo().valueChanges.subscribe((result: any) => {
-      this.graphData = result.data.viewer.repositories.nodes;
+    this._gitserviceService.getDetailsOfRepo().subscribe((result: any) => {
+      this.graphData = result;
       this.createSvg();
       this.drawBars(this.graphData);
     });

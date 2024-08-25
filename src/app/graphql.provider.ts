@@ -15,7 +15,7 @@ export function apolloOptionsFactory(): ApolloClientOptions<any> {
   const auth = setContext((operation, context) => {
     return {
           headers: {
-            Authorization: `Bearer ${'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'}`,
+            Authorization: `Bearer ${'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'}`,
           },
         };
     });

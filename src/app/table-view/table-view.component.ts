@@ -1,10 +1,11 @@
-import { Component, Input, input, OnInit } from '@angular/core';
-import { AgGridAngular } from 'ag-grid-angular'; 
+import { Component, Input, input, OnInit, inject ,ChangeDetectionStrategy } from '@angular/core';
+import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-quartz.css';
 import { GitserviceService } from '../gitservice.service';
-import { GitColumns } from '../interface';
+import { GitDashboardStore } from '../gitdashboard.store';
+import { Node } from '../GitData.interface';
 
 
 @Component({
@@ -12,19 +13,23 @@ import { GitColumns } from '../interface';
   standalone: true,
   imports: [AgGridAngular],
   templateUrl: './table-view.component.html',
-  styleUrl: './table-view.component.css'
+  providers: [GitDashboardStore],
+  styleUrl: './table-view.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableViewComponent implements OnInit{
+export class TableViewComponent implements OnInit {
 
-  constructor(private _gitserviceService:GitserviceService){}
+  constructor(private _gitserviceService: GitserviceService) { }
 
-  tableData!:Array<Object>;
- 
+  readonly store = inject(GitDashboardStore);
+
+  tableData!: Array<Node>;
+
   colDefs: ColDef[] = [
     { field: "name", filter: "agNumberColumnFilter" },
-    { field: "createdAt", filter: "agNumberColumnFilter"  },
+    { field: "createdAt", filter: "agNumberColumnFilter" },
     { field: "stargazerCount", filter: "agNumberColumnFilter" },
-    { field: "projectsUrl",filter: "agNumberColumnFilter",minWidth: 380 }
+    { field: "projectsUrl", filter: "agNumberColumnFilter", minWidth: 380 }
   ];
 
   public defaultColDef: ColDef = {
@@ -37,10 +42,16 @@ export class TableViewComponent implements OnInit{
   public paginationPageSizeSelector: number[] | boolean = [10, 25, 50];
   public themeClass: string = "ag-theme-quartz";
 
-  ngOnInit(): void {
-    this._gitserviceService.getDetailsOfRepo().valueChanges.subscribe((result: any) => {
-      console.log()
-      this.tableData = result.data.viewer.repositories.nodes;
+  ngOnInit(){
+    this._gitserviceService.getDetailsOfRepo().subscribe((result: any) => {
+      this.tableData = result;
+      console.log(this.tableData)
     });
+    this.loadAll().then(() => {
+      console.log('loaded', this.store)
+    });
+  }
+  async loadAll() {
+    await this.store.loadAll()
   }
 }
