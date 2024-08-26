@@ -1,17 +1,23 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, OnInit, Type, inject } from '@angular/core';
 import { GitserviceService } from '../gitservice.service';
+import { GitDashboardStore } from '../gitdashboard.store';
 import * as d3 from 'd3';
 import { Node } from '../GitData.interface';
+
 @Component({
   selector: 'app-graph-view',
   standalone: true,
-  imports: [],
+  imports: [ ],
+  providers: [GitDashboardStore],
   templateUrl: './graph-view.component.html',
-  styleUrl: './graph-view.component.css'
+  styleUrl: './graph-view.component.css',
+
 })
 export class GraphViewComponent implements OnInit{
 
   constructor(private _gitserviceService:GitserviceService){}
+
+  readonly store = inject(GitDashboardStore);
 
   graphData!:Array<Node>;
 
@@ -20,13 +26,18 @@ export class GraphViewComponent implements OnInit{
   private width = 750 - (this.margin * 2);
   private height = 400 - (this.margin * 2);
 
-  ngOnInit(): void {
+  ngOnInit(){
     this._gitserviceService.getDetailsOfRepo().subscribe((result: any) => {
-      this.graphData = result;
-      this.createSvg();
-      this.drawBars(this.graphData);
+      this.loadAll().then(() => {
+        this.createSvg();
+      this.drawBars(this.store.gitData());
+      });
     });
-}
+  }
+
+  async loadAll() {
+    await this.store.loadAll()
+  }
 
   private createSvg(): void {
     this.svg = d3.select("figure#bar")
@@ -68,3 +79,5 @@ private drawBars(data: any[]): void {
   .attr("fill", "#d04a35");
 }
 }
+
+

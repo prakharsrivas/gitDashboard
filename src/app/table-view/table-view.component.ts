@@ -1,4 +1,4 @@
-import { Component, Input, input, OnInit, inject ,ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import 'ag-grid-community/styles/ag-grid.css';
@@ -14,12 +14,12 @@ import { Node } from '../GitData.interface';
   imports: [AgGridAngular],
   templateUrl: './table-view.component.html',
   providers: [GitDashboardStore],
-  styleUrl: './table-view.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrl: './table-view.component.css'
 })
 export class TableViewComponent implements OnInit {
 
-  constructor(private _gitserviceService: GitserviceService) { }
+  constructor(private _gitserviceService: GitserviceService) { 
+  }
 
   readonly store = inject(GitDashboardStore);
 
@@ -42,13 +42,12 @@ export class TableViewComponent implements OnInit {
   public paginationPageSizeSelector: number[] | boolean = [10, 25, 50];
   public themeClass: string = "ag-theme-quartz";
 
-  ngOnInit(){
+  ngOnInit() {
     this._gitserviceService.getDetailsOfRepo().subscribe((result: any) => {
-      this.tableData = result;
-      console.log(this.tableData)
-    });
-    this.loadAll().then(() => {
-      console.log('loaded', this.store)
+      this.loadAll().then(() => {
+        this.tableData = this.store.gitData();
+        console.log(this.tableData)
+      });
     });
   }
   async loadAll() {

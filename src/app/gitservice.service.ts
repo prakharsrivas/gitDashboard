@@ -8,6 +8,8 @@ import { Node } from "./GitData.interface";
 })
 export class GitserviceService {
   constructor(private readonly apollo: Apollo) {}
+
+  dataSet:Array<Node>=[]
   
   public getDetailsOfRepo(){
     return this.apollo.watchQuery({
@@ -27,6 +29,12 @@ export class GitserviceService {
           }
         `,
       })
-      .valueChanges.pipe(map((result: any) => result.data.viewer.repositories.nodes));
+      .valueChanges.pipe(map((result: any) => this.dataSet = result.data.viewer.repositories.nodes));
+  }
+
+  public getAllData(){
+    this.getDetailsOfRepo()
+    console.log('getAllData')
+    return this.dataSet;
   }
 }

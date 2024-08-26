@@ -2,6 +2,7 @@ import {inject } from "@angular/core";
 import { patchState, signalStore, withState, withMethods } from "@ngrx/signals";
 import { GitserviceService } from "./gitservice.service";
 import { Node } from "./GitData.interface";
+import { map } from "rxjs";
 
 type GitDataState = {
   gitData: Array<Node>;
@@ -29,9 +30,8 @@ export const GitDashboardStore = signalStore(
   withMethods((store, _gitserviceService = inject(GitserviceService)) => ({
     async loadAll(): Promise<void> {
       patchState(store, { isLoading: true });
-      const gitData = await _gitserviceService.getDetailsOfRepo();
+      const gitData = await _gitserviceService.getAllData();
       patchState(store, { gitData, isLoading: false });
-
     },
   }))
 );

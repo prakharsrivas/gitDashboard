@@ -6,7 +6,7 @@ import { HomeComponent } from './home/home.component';
 
 export const routes: Routes = [
     { path: 'table', component: TableViewComponent },
-    // { path: '', component: AppComponent },
+   //{ path: '**', component: AppComponent },
     { path: 'graph', component: GraphViewComponent },
     { path: 'home', component: HomeComponent },
 ];
