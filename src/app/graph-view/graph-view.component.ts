@@ -7,7 +7,6 @@ import { Node } from '../GitData.interface';
 @Component({
   selector: 'app-graph-view',
   standalone: true,
-  imports: [ ],
   providers: [GitDashboardStore],
   templateUrl: './graph-view.component.html',
   styleUrl: './graph-view.component.css',

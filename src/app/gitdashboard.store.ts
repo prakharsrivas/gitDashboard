@@ -16,8 +16,7 @@ const initialState: GitDataState = {
       name: "test",
       createdAt: "2012-05-18T10:45:42Z",
       stargazerCount: 1,
-      projectsUrl: "1212",
-      __typename: "asd",
+      projectsUrl: "1212"
     }
   ],
   isLoading: false,

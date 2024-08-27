@@ -18,8 +18,7 @@ import { Node } from '../GitData.interface';
 })
 export class TableViewComponent implements OnInit {
 
-  constructor(private _gitserviceService: GitserviceService) { 
-  }
+  constructor(private _gitserviceService: GitserviceService) {}
 
   readonly store = inject(GitDashboardStore);
 
@@ -46,7 +45,6 @@ export class TableViewComponent implements OnInit {
     this._gitserviceService.getDetailsOfRepo().subscribe((result: any) => {
       this.loadAll().then(() => {
         this.tableData = this.store.gitData();
-        console.log(this.tableData)
       });
     });
   }
